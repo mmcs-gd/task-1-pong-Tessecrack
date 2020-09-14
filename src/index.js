@@ -260,7 +260,7 @@ function windowLoser(context) {
     context.closePath();
 }
 
-function valueOfSec()
+function updateTimeScores()
 {
     if (!isLose) { 
         timeInGame++;
@@ -287,7 +287,7 @@ function setup() {
     gameState.tickLength = 15; //ms
     let directionX = Math.random() <= 0.5 ? -1 : 1;
     let directionY = Math.random() <= 0.5 ? -1 : 1;
-    setInterval(valueOfSec, 1000);
+    setInterval(updateTimeScores, 1000);
     const platform = {
         width: 300,
         height: 50,
