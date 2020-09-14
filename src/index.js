@@ -270,9 +270,9 @@ function updateTimeScores()
         score += 15;
         takeBonus = false;
     }
-    if (timeInGame % 30 == 0) {
-        gameState.ball.vx *= 2;
-        gameState.ball.vy *= 2;
+    if (timeInGame % 10 == 0) {
+        gameState.ball.vx += gameState.ball.vx/10;
+        gameState.ball.vy += gameState.ball.vy/10;
     }
     isBonusTime = timeInGame % 15 == 0;
     if (isBonusTime) initBonus();
