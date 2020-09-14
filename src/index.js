@@ -5,9 +5,11 @@ let isLose = false;
 
 let isBonusTime = false;
 let takeBonus = false;
-
-let timeInGame = 0;
 let bonusTrigger = false;
+
+let score = 0;
+let timeInGame = 0;
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
@@ -80,9 +82,11 @@ function moveBonus(bonus) {
         bonusCollisionOnPlatform(bonus);
     }
 }
+
 function bonusCollisionOnBorders(bonus) {
     bonus.vx *= bonus.x <= bonus.width || bonus.x + bonus.width >= canvas.width ? -1 : 1;
 }
+
 function bonusCollisionOnPlatform(bonus) {
     let inBorderPlatform = gameState.player.x - gameState.player.width / 2 < bonus.x 
         && gameState.player.x + gameState.player.width / 2 > bonus.x;
@@ -102,28 +106,7 @@ function ballCollisionOnPlatform(ball){
     if (ballOnPlatform(ball)) {
         return;
     }
-    //ballOutPlatform(ball);
 }
-
-function ballOutPlatform(object) {
-    let leftDownSidePlatform = gameState.player.x - gameState.player.width/2 + gameState.player.height/2; 
-    let leftUpSidePlatform = gameState.player.x - gameState.player.width/2 - gameState.player.height/2;
-
-    let rightUpSidePlatform = gameState.player.x + gameState.player.width/2 - gameState.player.height/2;
-    let rightDownSidePlatform = gameState.player.x + gameState.player.width/2 + gameState.player.height/2;
-    
-    let onLeftSidePlatform = object.x + object.radius >= gameState.player.x - gameState.player.width / 2
-    && leftUpSidePlatform <= object.y && leftDownSidePlatform >= object.y;
-
-    let onRightSidePlatform = object.x - object.radius >= gameState.player.x + gameState.player.width / 2 
-    && rightUpSidePlatform <= object.y && rightDownSidePlatform >= object.y;
-
-    if (onLeftSidePlatform || onRightSidePlatform) {
-        object.vx *= -1;
-        object.vy *= -1;
-    }
-}
-
 function ballOnPlatform(object) {
     let leftAnglePlatform = gameState.player.x - gameState.player.width / 2;
 
@@ -157,8 +140,7 @@ function initBonus() {
 }
 
 function checkLoseBall(ball) {
-    if (ball.y > gameState.player.y)
-        isLose = true;
+    if (ball.y > gameState.player.y) isLose = true;
 }
 
 function checkLoseBonus(bonus) {
@@ -166,7 +148,6 @@ function checkLoseBonus(bonus) {
         bonusTrigger = false;
         takeBonus = false;
     }
-
 }
 
 function run(tFrame) {
@@ -198,6 +179,7 @@ function drawPlatform(context) {
     context.fill();
     context.closePath();
 }
+
 function drawBonus(context) {
     if (bonusTrigger) {
         const {x, y, width, height} = gameState.bonus;
@@ -213,6 +195,7 @@ function drawBonus(context) {
         context.closePath();
     }
 }
+
 function drawTime(context) {
     context.beginPath();
     context.strokeStyle = "#19ff19";
@@ -222,10 +205,11 @@ function drawTime(context) {
     context.shadowOffsetX = 5; 
     context.shadowOffsetY = 5;
     context.shadowBlur = 10;
-    context.strokeText(timeInGame, 20, 20, 50);
+    context.strokeText(score, 20, 20, 50);
     context.textBaseline = "top";
     context.closePath();
 }
+
 function drawBall(context) {
     const {x, y, radius} = gameState.ball;
     context.beginPath();
@@ -275,11 +259,15 @@ function windowLoser(context) {
     context.textBaseline = "top";
     context.closePath();
 }
+
 function valueOfSec()
 {
-    if (!isLose) timeInGame++;
+    if (!isLose) { 
+        timeInGame++;
+        score++;
+    }
     if (takeBonus) {
-        timeInGame += 15;
+        score += 15;
         takeBonus = false;
     }
     if (timeInGame % 30 == 0) {
@@ -289,12 +277,11 @@ function valueOfSec()
     isBonusTime = timeInGame % 15 == 0;
     if (isBonusTime) initBonus();
 }
+
 function setup() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
     canvas.addEventListener('mousemove', onMouseMove, false);
-
     gameState.lastTick = performance.now();
     gameState.lastRender = gameState.lastTick;
     gameState.tickLength = 15; //ms
@@ -305,7 +292,6 @@ function setup() {
         width: 300,
         height: 50,
     };
-
     gameState.player = {
         x: 100,
         y: canvas.height - platform.height / 2,
@@ -332,6 +318,7 @@ function setup() {
         vy: 0
     }
 }
+
 function getRandom(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
