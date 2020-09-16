@@ -6,7 +6,7 @@ let isLose = false;
 let isBonusTime = false;
 let takeBonus = false;
 let bonusTrigger = false;
-
+let punchBall = false;
 let score = 0;
 let timeInGame = 0;
 
@@ -103,29 +103,52 @@ function ballCollisionOnBorders(ball) {
 }
 
 function ballCollisionOnPlatform(ball){
-    if (ballOnPlatform(ball)) {
+    //collisionOnBorderPlatform(ball);
+    ballOnPlatform(ball);
+}
+function ballOnPlatform(ball) {
+    let leftAnglePlatform = gameState.player.x - gameState.player.width / 2 + gameState.player.height/2;
+
+    let rightAnglePlatform = gameState.player.x + gameState.player.width / 2 + gameState.player.height/2;
+
+    let insidePlatform = ball.x > leftAnglePlatform && ball.x < rightAnglePlatform;
+
+    let onPlatform = ball.y + ball.radius > canvas.height - gameState.player.height;
+
+    let besidePlatform = ball.x < leftAnglePlatform && ball.x + ball.radius > leftAnglePlatform
+    || ball.x > rightAnglePlatform && ball.x - ball.radius < rightAnglePlatform;
+
+    punchBall = ball.vy > 0;
+
+    if (insidePlatform && onPlatform && punchBall) {
+        ball.vy *= -1;
+        console.log("on");
+        punchBall = !punchBall;
+        return;
+    }
+    if (besidePlatform && onPlatform && punchBall) {
+        ball.vy *= -1;
+        console.log("beside");
+        punchBall = !punchBall;
         return;
     }
 }
-function ballOnPlatform(object) {
-    let leftAnglePlatform = gameState.player.x - gameState.player.width / 2;
+function collisionOnBorderPlatform(ball) {
+    let leftBorderPlatformX = gameState.player.x - gameState.player.width / 2;
+    let rightBorderPlatformX = gameState.player.x + gameState.player.width / 2;
 
-    let rightAnglePlatform = gameState.player.x + gameState.player.width / 2;
+    let isCollisionBorder = ball.y < gameState.player.y - gameState.player.height / 2 
+    && ball.y >= gameState.player.y + gameState.player.height / 2;
 
-    let insidePlatform = object.x > leftAnglePlatform && object.x < rightAnglePlatform;
+    let isCollisionOnLeftBorder = isCollisionBorder && leftBorderPlatformX <= ball.x + ball.radius;
+    let isCollisionOnRightBorder = isCollisionBorder && rightBorderPlatformX >= ball.x + ball.radius;
 
-    let onPlatform = object.y + object.radius >= canvas.height - gameState.player.height;
-
-    let besidePlatform = object.x <= leftAnglePlatform && object.x + object.radius >= leftAnglePlatform
-    || object.x >= rightAnglePlatform && object.x - object.radius <= rightAnglePlatform;
-
-    if ((insidePlatform || besidePlatform) && onPlatform) {
-        object.vy *= -1;
-        return true;
+    if (isCollisionOnLeftBorder || isCollisionOnRightBorder) {
+        console.log("ggg");
+        ball.vy *= -1;
+        ball.vx *= -1;
     }
-    return false;
 }
-
 function initBonus() {
     if (isBonusTime)
     {
