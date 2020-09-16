@@ -7,11 +7,36 @@
     * { margin:0; padding:0; }
     html, body { width:100%; height:100%; }
     canvas { display:block; }
+    .button {
+      position: absolute;
+      margin-left: 50%;
+      margin-right: 50%; 
+      text-align: center;
+      margin-top: 25%;
+      color: greenyellow;
+      text-decoration: none;
+      padding: 16px 32px;
+      outline: none;
+      font-style:italic;
+      border-width: 2px 0;
+      border-style: solid none;
+      border-color: darkmagenta #000 darkmagenta;
+      border-radius: 6px;
+      background: linear-gradient(180deg, darkviolet, darkviolet);
+      transition: 0.2s;
+    }
+    .button:hover {
+      background: linear-gradient(180deg, blueviolet, darkmagenta);
+      }
+    .button:active {
+      background: linear-gradient(180deg, darkmagenta,blueviolet);
+      }
   </style>
 </head>
-
 <body>
-	<canvas width="100%" height="100%" id='cnvs'></canvas>
+  <button class="button" id="startButton">START</button>
+  <canvas width="100%" height="100%" id='cnvs' 
+  style="border:1px solid black; background: linear-gradient(to top, black, darkmagenta);"></canvas>
 	<script src="./src/index.js"></script>
 </body>
 </html>
